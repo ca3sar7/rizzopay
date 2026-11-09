@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Checkout · DiagLava</title>
+  <meta name="description" content="DiagLava - Conserto na Palma da Mão. Acesso digital imediato.">
+  <!-- Utmify UTMs Tracking -->
+  <script
+    src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+    data-utmify-prevent-subids
+    async
+    defer
+  ></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            surface: "#F5F5F7",
+            border: "#E5E5EA",
+            foreground: "#1D1D1F",
+            secondary: "#6E6E73",
+            accent: {
+              DEFAULT: "#4F46E5",
+              hover: "#4338CA",
+              pressed: "#3730A3"
+            },
+            success: {
+              DEFAULT: "#1F9D55",
+              bg: "#EAF7EF"
+            },
+            error: {
+              DEFAULT: "#D92D20",
+              bg: "#FEF3F2"
+            },
+            warning: {
+              DEFAULT: "#B54708",
+              bg: "#FFFAEB"
+            }
+          },
+          borderRadius: {
+            card: "20px",
+            btn: "14px"
+          },
+          boxShadow: {
+            card: "0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)"
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', 'Inter', '"Segoe UI"', 'Roboto', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+    .safe-bottom {
+      padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#F5F5F7] text-[#1D1D1F] font-sans antialiased">
+
+  <main class="min-h-screen w-full flex flex-col items-center py-4 sm:py-8 px-4 pb-28 md:pb-12">
+    <div class="w-full max-w-[440px] md:max-w-[960px] flex flex-col gap-5">
+
+      <!-- 1. Banner Superior (Mobile & Desktop) -->
+      <header class="w-full rounded-[20px] overflow-hidden bg-white border border-[#E5E5EA] shadow-sm">
+        <div class="relative w-full h-[140px] sm:h-[160px] md:h-[220px]">
+          <img
+            src="images/banner.png"
+            alt="Banner Promocional DiagLava - Conserto na Palma da Mão"
+            class="w-full h-full object-cover select-none"
+            loading="eager"
+          />
+        </div>
+      </header>
+
+      <!-- 2. Mini-indicador de 3 passos -->
+      <nav aria-label="Etapas da compra" class="w-full px-1">
+        <ol class="flex items-center justify-between gap-2 select-none py-1">
+          <!-- Passo 1 -->
+          <li id="step-nav-1" class="flex items-center gap-1.5 sm:gap-2 text-[13px] font-semibold text-[#4F46E5] transition-colors">
+            <span id="step-badge-1" class="w-6 h-6 rounded-full flex items-center justify-center text-[12px] font-bold bg-[#4F46E5] text-white shadow-sm">1</span>
+            <span>Seus dados</span>
+          </li>
+          <li id="step-line-1" aria-hidden="true" class="flex-1 h-[2px] rounded-full mx-1 bg-[#E5E5EA] transition-colors"></li>
+
+          <!-- Passo 2 -->
+          <li id="step-nav-2" class="flex items-center gap-1.5 sm:gap-2 text-[13px] font-medium text-[#6E6E73]/70 transition-colors">
+            <span id="step-badge-2" class="w-6 h-6 rounded-full flex items-center justify-center text-[12px] font-bold bg-[#E5E5EA] text-[#6E6E73]">2</span>
+            <span>Pagar com PIX</span>
+          </li>
+          <li id="step-line-2" aria-hidden="true" class="flex-1 h-[2px] rounded-full mx-1 bg-[#E5E5EA] transition-colors"></li>
+
+          <!-- Passo 3 -->
+          <li id="step-nav-3" class="flex items-center gap-1.5 sm:gap-2 text-[13px] font-medium text-[#6E6E73]/70 transition-colors">
+            <span id="step-badge-3" class="w-6 h-6 rounded-full flex items-center justify-center text-[12px] font-bold bg-[#E5E5EA] text-[#6E6E73]">3</span>
+            <span>Acesso</span>
+          </li>
+        </ol>
+      </nav>
+
+      <!-- Layout em Grid / Colunas -->
+      <div class="w-full grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
+
+        <!-- Coluna Esquerda: Formulário / Painel PIX (~560px no desktop) -->
+        <div class="w-full md:col-span-7 flex flex-col gap-5">
+
+          <!-- Alerta de Erro de Geração ou Conexão -->
+          <div id="error-box" class="hidden w-full p-4 rounded-[14px] bg-[#FEF3F2] border border-[#D92D20]/25 flex flex-col gap-3">
+            <div class="flex items-start gap-3 text-[#D92D20]">
+              <svg class="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                <line x1="12" y1="8" x2="12" y2="12" stroke-width="2"/>
+                <line x1="12" y1="16" x2="12.01" y2="16" stroke-width="2"/>
+              </svg>
+              <div class="flex flex-col">
+                <span id="error-title" class="text-[14px] font-bold text-[#D92D20]">Atenção ao gerar PIX</span>
+                <p id="error-message" class="text-[13px] text-[#D92D20]/90 mt-0.5 leading-snug">
+                  Não foi possível gerar seu PIX. Confira seus dados e tente novamente.
+                </p>
+              </div>
+            </div>
+            <div class="flex justify-end pt-1">
+              <button
+                type="button"
+                id="btn-retry-error"
+                class="h-[38px] px-4 rounded-[10px] text-[13px] font-semibold border border-[#D92D20]/40 text-[#D92D20] hover:bg-[#D92D20]/10 transition-colors"
+              >
+                Tentar novamente
+              </button>
+            </div>
+          </div>
+
+          <!-- Resumo Recolhido do Comprador (quando o PIX estiver ativo) -->
+          <div id="customer-summary-card" class="hidden bg-white rounded-[20px] p-5 border border-[#E5E5EA] shadow-sm flex items-center justify-between text-[14px]">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <div class="w-8 h-8 rounded-full bg-[#EAF7EF] text-[#1F9D55] flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 8v6m3-3h-6"/>
+                </svg>
+              </div>
+              <div class="flex flex-col min-w-0">
+                <span id="summary-name" class="font-semibold text-[#1D1D1F] truncate"></span>
+                <span id="summary-contact" class="text-[#6E6E73] text-[13px] truncate"></span>
+              </div>
+            </div>
+            <span class="text-[12px] font-medium text-[#6E6E73]/50 select-none cursor-not-allowed pl-2 shrink-0" title="Não é possível alterar dados enquanto houver PIX ativo">
+              Editar
+            </span>
+          </div>
+
+          <!-- Formulário do Cliente (Card Branco) -->
+          <form id="checkout-form" class="bg-white rounded-[20px] p-5 sm:p-6 border border-[#E5E5EA] shadow-card flex flex-col gap-5" novalidate>
+            <div class="flex flex-col gap-1 pb-1">
+              <h2 class="text-[18px] font-semibold text-[#1D1D1F]">Dados para recebimento</h2>
+              <p class="text-[13px] text-[#6E6E73]">
+                Informe onde você deseja receber as informações e o acesso ao DiagLava.
+              </p>
+            </div>
+
+            <div class="flex flex-col gap-4">
+              <!-- Campo 1: Nome Completo -->
+              <div class="flex flex-col gap-1.5 w-full">
+                <label for="input-name" class="text-[14px] font-medium text-[#1D1D1F] select-none">
+                  Nome completo
+                </label>
+                <div class="relative flex items-center">
+                  <input
+                    id="input-name"
+                    name="name"
+                    type="text"
+                    autocomplete="name"
+                    autocapitalize="words"
+                    placeholder="Ex: Carlos Eduardo Silva"
+                    class="w-full h-[52px] px-4 rounded-[14px] text-[16px] text-[#1D1D1F] bg-white border border-[#E5E5EA] transition-all duration-200 outline-none focus:border-[#4F46E5] focus:ring-4 focus:ring-[#4F46E5]/25"
+                  />
+                  <div id="check-name" class="hidden absolute right-3.5 items-center pointer-events-none text-[#1F9D55]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                    </svg>
+                  </div>
+                </div>
+                <p id="error-name" class="hidden text-[13px] text-[#D92D20] mt-0.5 flex items-center gap-1.5"></p>
+              </div>
+
+              <!-- Campo 2: E-mail -->
+              <div class="flex flex-col gap-1.5 w-full">
+                <label for="input-email" class="text-[14px] font-medium text-[#1D1D1F] select-none">
+                  E-mail
+                </label>
+                <div class="relative flex items-center">
+                  <input
+                    id="input-email"
+                    name="email"
+                    type="email"
+                    inputmode="email"
+                    autocomplete="email"
+                    autocapitalize="off"
+                    placeholder="seuemail@exemplo.com"
+                    class="w-full h-[52px] px-4 rounded-[14px] text-[16px] text-[#1D1D1F] bg-white border border-[#E5E5EA] transition-all duration-200 outline-none focus:border-[#4F46E5] focus:ring-4 focus:ring-[#4F46E5]/25"
+                  />
+                  <div id="check-email" class="hidden absolute right-3.5 items-center pointer-events-none text-[#1F9D55]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                    </svg>
+                  </div>
+                </div>
+                <p id="error-email" class="hidden text-[13px] text-[#D92D20] mt-0.5 flex items-center gap-1.5"></p>
+                <p id="suggestion-email" class="hidden text-[13px] text-[#4F46E5] mt-0.5">
+                  <span id="suggestion-text"></span>
+                  <button type="button" id="btn-apply-suggestion" class="underline font-semibold hover:text-[#4338CA] px-1">Corrigir</button>
+                </p>
+              </div>
+
+              <!-- Campo 3: Telefone com DDD -->
+              <div class="flex flex-col gap-1.5 w-full">
+                <label for="input-phone" class="text-[14px] font-medium text-[#1D1D1F] select-none">
+                  Telefone com DDD
+                </label>
+                <div class="relative flex items-center">
+                  <input
+                    id="input-phone"
+                    name="phone"
+                    type="tel"
+                    inputmode="tel"
+                    autocomplete="tel-national"
+                    placeholder="(11) 99999-9999"
+                    maxlength="15"
+                    class="w-full h-[52px] px-4 rounded-[14px] text-[16px] text-[#1D1D1F] bg-white border border-[#E5E5EA] transition-all duration-200 outline-none focus:border-[#4F46E5] focus:ring-4 focus:ring-[#4F46E5]/25"
+                  />
+                  <div id="check-phone" class="hidden absolute right-3.5 items-center pointer-events-none text-[#1F9D55]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                    </svg>
+                  </div>
+                </div>
+                <p id="error-phone" class="hidden text-[13px] text-[#D92D20] mt-0.5 flex items-center gap-1.5"></p>
+                <p class="text-[13px] text-[#6E6E73] mt-0.5 leading-[18px]">
+                  Para enviarmos o acesso e avisos da sua compra.
+                </p>
+              </div>
+            </div>
+
+            <!-- Selos Discretos -->
+            <div class="grid grid-cols-3 gap-2 pt-2 border-t border-[#E5E5EA] text-[12px] text-[#6E6E73]">
+              <div class="flex items-center gap-1.5 justify-center text-center">
+                <svg class="w-4 h-4 text-[#4F46E5] shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+                <span>Acesso imediato</span>
+              </div>
+              <div class="flex items-center gap-1.5 justify-center text-center">
+                <svg class="w-4 h-4 text-[#1F9D55] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0110 0v4"/>
+                </svg>
+                <span>Ambiente seguro</span>
+              </div>
+              <div class="flex items-center gap-1.5 justify-center text-center">
+                <svg class="w-4 h-4 text-[#4F46E5] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+                <span>Pagamento via PIX</span>
+              </div>
+            </div>
+
+            <!-- Botão no Desktop -->
+            <div class="hidden md:block pt-1">
+              <button
+                type="submit"
+                id="btn-desktop-submit"
+                disabled
+                class="w-full h-[52px] rounded-[14px] bg-[#4F46E5] text-white font-medium text-[16px] shadow-sm hover:bg-[#4338CA] active:bg-[#3730A3] focus:outline-none focus:ring-4 focus:ring-[#4F46E5]/25 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                <span>Gerar PIX de R$ 37,00</span>
+              </button>
+            </div>
+          </form>
+
+          <!-- Painel PIX (Aparece após gerar o PIX) -->
+          <div id="pix-panel" class="hidden bg-white rounded-[20px] p-5 sm:p-6 border border-[#E5E5EA] shadow-card flex flex-col gap-5">
+            <!-- Valor -->
+            <div class="flex flex-col gap-1">
+              <span class="text-[15px] font-medium text-[#6E6E73]">Valor do pagamento</span>
+              <div class="text-[32px] font-bold text-[#1D1D1F] tracking-tight leading-none">
+                R$ 37,00
+              </div>
+            </div>
+
+            <!-- Status / Contador Regressivo -->
+            <div id="status-banner" class="w-full p-3.5 rounded-[14px] border bg-[#F5F5F7] border-[#E5E5EA] text-[#1D1D1F] flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <div id="spinner-awaiting" class="w-4 h-4 rounded-full border-2 border-[#4F46E5] border-r-transparent animate-spin"></div>
+                <span id="status-banner-text" class="text-[13.5px] font-medium">Aguardando confirmação do pagamento...</span>
+              </div>
+              <div id="countdown-badge" class="flex items-center gap-1 text-[13px] font-semibold px-2 py-0.5 rounded-md bg-white text-[#1D1D1F] border border-[#E5E5EA]">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <span id="countdown-timer">15:00</span>
+              </div>
+            </div>
+
+            <!-- Botão de Renovar PIX (Exibido se expirado) -->
+            <button
+              type="button"
+              id="btn-renew-pix"
+              class="hidden w-full h-[52px] rounded-[14px] bg-[#4F46E5] text-white font-medium text-[16px] shadow-sm hover:bg-[#4338CA] active:bg-[#3730A3] focus:outline-none focus:ring-4 focus:ring-[#4F46E5]/25 transition-all duration-200 flex items-center justify-center gap-2"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+              </svg>
+              <span>Gerar novo PIX de R$ 37,00</span>
+            </button>
+
+            <!-- Botão Primário "Copiar código PIX" -->
+            <div id="pix-copy-area" class="w-full flex flex-col gap-1.5">
+              <button
+                type="button"
+                id="btn-copy-pix"
+                class="w-full h-[52px] rounded-[14px] bg-[#4F46E5] text-white font-medium text-[16px] shadow-sm hover:bg-[#4338CA] active:bg-[#3730A3] focus:outline-none focus:ring-4 focus:ring-[#4F46E5]/25 transition-all duration-200 flex items-center justify-center gap-2"
+              >
+                <svg id="icon-copy" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                  <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                </svg>
+                <svg id="icon-copied" class="hidden w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+                <span id="btn-copy-text">Copiar código PIX</span>
+              </button>
+              <div id="aria-copy-announcement" aria-live="polite" class="sr-only"></div>
+            </div>
+
+            <!-- Campo Readonly com o código Copia e Cola -->
+            <div class="flex flex-col gap-1.5">
+              <label for="input-pix-code" class="text-[13px] font-medium text-[#6E6E73] select-none">
+                Código Pix Copia e Cola
+              </label>
+              <input
+                id="input-pix-code"
+                type="text"
+                readonly
+                aria-label="Código Pix Copia e Cola"
+                class="w-full h-[46px] px-3.5 rounded-[12px] bg-[#F5F5F7] border border-[#E5E5EA] text-[#1D1D1F] text-[13px] font-mono truncate focus:outline-none focus:ring-2 focus:ring-[#4F46E5]/30 cursor-text select-all"
+              />
+            </div>
+
+            <!-- QR Code (Complementar) -->
+            <div id="qr-code-wrapper" class="w-full flex flex-col items-center">
+              <button
+                type="button"
+                id="btn-toggle-qr-mobile"
+                class="md:hidden flex items-center justify-center gap-1.5 text-[14px] font-semibold text-[#4F46E5] py-2 px-3 rounded-lg hover:bg-[#F5F5F7] transition-colors"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <rect x="3" y="3" width="7" height="7"/>
+                  <rect x="14" y="3" width="7" height="7"/>
+                  <rect x="14" y="14" width="7" height="7"/>
+                  <rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                <span id="toggle-qr-text">Ver QR Code para escanear</span>
+              </button>
+
+              <div id="qr-code-container" class="hidden md:flex flex-col items-center justify-center p-3 bg-white border border-[#E5E5EA] rounded-[14px] shadow-sm mt-2">
+                <img id="img-qr-code" src="" alt="QR Code PIX para pagamento" class="w-[180px] h-[180px] object-contain select-none"/>
+                <p class="text-[12px] text-[#6E6E73] text-center mt-2">Aponte a câmera do aplicativo do seu banco</p>
+              </div>
+            </div>
+
+            <!-- Instruções -->
+            <div class="w-full flex flex-col gap-3 pt-3 border-t border-[#E5E5EA]">
+              <h4 class="text-[14px] font-semibold text-[#1D1D1F]">Como pagar:</h4>
+              <ol class="flex flex-col gap-2.5 text-[14px] text-[#1D1D1F]">
+                <li class="flex items-start gap-2.5">
+                  <span class="w-5 h-5 rounded-full bg-[#F5F5F7] border border-[#E5E5EA] text-[#6E6E73] text-[12px] font-semibold flex items-center justify-center shrink-0 mt-0.5">1</span>
+                  <span>Clique em <strong>Copiar código PIX</strong>.</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <span class="w-5 h-5 rounded-full bg-[#F5F5F7] border border-[#E5E5EA] text-[#6E6E73] text-[12px] font-semibold flex items-center justify-center shrink-0 mt-0.5">2</span>
+                  <span>Abra o aplicativo do seu banco.</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <span class="w-5 h-5 rounded-full bg-[#F5F5F7] border border-[#E5E5EA] text-[#6E6E73] text-[12px] font-semibold flex items-center justify-center shrink-0 mt-0.5">3</span>
+                  <span>Entre na área <strong>PIX</strong>.</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <span class="w-5 h-5 rounded-full bg-[#F5F5F7] border border-[#E5E5EA] text-[#6E6E73] text-[12px] font-semibold flex items-center justify-center shrink-0 mt-0.5">4</span>
+                  <span>Selecione a opção <strong>Pix Copia e Cola</strong>.</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <span class="w-5 h-5 rounded-full bg-[#F5F5F7] border border-[#E5E5EA] text-[#6E6E73] text-[12px] font-semibold flex items-center justify-center shrink-0 mt-0.5">5</span>
+                  <span>Cole o código copiado.</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <span class="w-5 h-5 rounded-full bg-[#F5F5F7] border border-[#E5E5EA] text-[#6E6E73] text-[12px] font-semibold flex items-center justify-center shrink-0 mt-0.5">6</span>
+                  <span>Confira os dados e confirme o pagamento.</span>
+                </li>
+              </ol>
+
+              <div class="mt-2 p-3 bg-[#F5F5F7] rounded-[14px] flex items-start gap-2.5 text-[13px] text-[#6E6E73] leading-[18px]">
+                <svg class="w-4 h-4 text-[#4F46E5] shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="16" x2="12" y2="12"/>
+                  <line x1="12" y1="8" x2="12.01" y2="8"/>
+                </svg>
+                <span>Assim que o pagamento for confirmado, você será levado automaticamente ao próximo passo. Não feche esta página.</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Coluna Direita: Resumo do Pedido (Desktop Sticky ~360px) -->
+        <aside class="w-full md:col-span-5 md:sticky md:top-6 flex flex-col gap-4">
+          <div class="bg-white rounded-[20px] p-5 sm:p-6 border border-[#E5E5EA] shadow-card flex flex-col gap-4">
+            <div class="flex items-center justify-between pb-3 border-b border-[#E5E5EA]">
+              <h2 class="text-[17px] font-semibold text-[#1D1D1F]">Resumo do pedido</h2>
+              <span class="text-[12px] font-medium text-[#1F9D55] bg-[#EAF7EF] px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                Acesso digital imediato
+              </span>
+            </div>
+
+            <div class="flex items-center gap-3.5">
+              <div class="relative w-[72px] h-[72px] rounded-[14px] overflow-hidden border border-[#E5E5EA] bg-[#F5F5F7] shrink-0">
+                <img
+                  src="images/product.png"
+                  alt="Capa do infoproduto DiagLava"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+
+              <div class="flex flex-col min-w-0 flex-1">
+                <h3 class="text-[15px] font-semibold text-[#1D1D1F] leading-tight truncate">
+                  DiagLava - Conserto na Palma da Mão
+                </h3>
+                <div class="flex items-baseline gap-1 mt-1">
+                  <span class="text-[20px] font-bold text-[#1D1D1F] tracking-tight">
+                    R$ 37,00
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-[#E5E5EA] flex items-center justify-between text-[14px]">
+              <span class="text-[#6E6E73]">Total a pagar</span>
+              <span class="text-[18px] font-bold text-[#4F46E5]">R$ 37,00</span>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+
+    <!-- 6. Botão Fixo na Base (Mobile Sticky Action Bar) -->
+    <div id="sticky-bar" class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#E5E5EA] px-4 pt-3 safe-bottom shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
+      <div class="max-w-[440px] mx-auto w-full">
+        <!-- Botão Formulário -->
+        <button
+          type="button"
+          id="btn-mobile-submit"
+          disabled
+          class="w-full h-[52px] rounded-[14px] bg-[#4F46E5] text-white font-medium text-[16px] shadow-sm hover:bg-[#4338CA] active:bg-[#3730A3] focus:outline-none transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        >
+          <span>Gerar PIX de R$ 37,00</span>
+        </button>
+
+        <!-- Botão Copiar PIX (quando PIX estiver ativo) -->
+        <button
+          type="button"
+          id="btn-mobile-copy-pix"
+          class="hidden w-full h-[52px] rounded-[14px] bg-[#4F46E5] text-white font-medium text-[16px] shadow-sm hover:bg-[#4338CA] active:bg-[#3730A3] focus:outline-none transition-all duration-200 flex items-center justify-center gap-2"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+          </svg>
+          <span id="btn-mobile-copy-text">Copiar código PIX</span>
+        </button>
+
+        <!-- Botão Renovar PIX (quando expirado) -->
+        <button
+          type="button"
+          id="btn-mobile-renew-pix"
+          class="hidden w-full h-[52px] rounded-[14px] bg-[#4F46E5] text-white font-medium text-[16px] shadow-sm hover:bg-[#4338CA] active:bg-[#3730A3] focus:outline-none transition-all duration-200 flex items-center justify-center gap-2"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+          <span>Gerar novo PIX de R$ 37,00</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    /**
+     * Módulo de Checkout DiagLava
+     */
+    (function () {
+      // 1. Constantes e Configurações
+      const DOMAIN_TYPOS = {
+        'gmial.com': 'gmail.com', 'gmai.com': 'gmail.com', 'gamil.com': 'gmail.com',
+        'gmaill.com': 'gmail.com', 'hotmial.com': 'hotmail.com', 'hotmai.com': 'hotmail.com',
+        'otlook.com': 'outlook.com', 'outlok.com': 'outlook.com', 'yaho.com': 'yahoo.com'
+      };
+
+      const VALID_DDDS = new Set([
+        '11','12','13','14','15','16','17','18','19',
+        '21','22','24','27','28',
+        '31','32','33','34','35','37','38',
+        '41','42','43','44','45','46','47','48','49',
+        '51','53','54','55',
+        '61','62','64','63','65','66','67',
+        '71','73','74','75','77','79',
+        '81','87','82','83','84',
+        '85','88','86','89','98','99','91','93','94','96','92','97','95','68','69'
+      ]);
+
+      let state = 'idle'; // idle, incomplete, valid, submitting, pixReady, copied, awaiting, approved, expired, generationError, communicationError
+      let activeTransactionId = sessionStorage.getItem('diaglava_active_tid') || null;
+      let expiresAtTimestamp = null;
+      let countdownTimerId = null;
+      let pollingTimerId = null;
+      let isRedirecting = false;
+      let qrCodeOpenMobile = false;
+
+      // 2. Elementos DOM
+      const form = document.getElementById('checkout-form');
+      const inputName = document.getElementById('input-name');
+      const inputEmail = document.getElementById('input-email');
+      const inputPhone = document.getElementById('input-phone');
+      const checkName = document.getElementById('check-name');
+      const checkEmail = document.getElementById('check-email');
+      const checkPhone = document.getElementById('check-phone');
+      const errorName = document.getElementById('error-name');
+      const errorEmail = document.getElementById('error-email');
+      const errorPhone = document.getElementById('error-phone');
+      const suggestionEmail = document.getElementById('suggestion-email');
+      const suggestionText = document.getElementById('suggestion-text');
+      const btnApplySuggestion = document.getElementById('btn-apply-suggestion');
+
+      const btnDesktopSubmit = document.getElementById('btn-desktop-submit');
+      const btnMobileSubmit = document.getElementById('btn-mobile-submit');
+      const customerSummaryCard = document.getElementById('customer-summary-card');
+      const summaryName = document.getElementById('summary-name');
+      const summaryContact = document.getElementById('summary-contact');
+
+      const pixPanel = document.getElementById('pix-panel');
+      const inputPixCode = document.getElementById('input-pix-code');
+      const btnCopyPix = document.getElementById('btn-copy-pix');
+      const btnCopyText = document.getElementById('btn-copy-text');
+      const iconCopy = document.getElementById('icon-copy');
+      const iconCopied = document.getElementById('icon-copied');
+      const btnMobileCopyPix = document.getElementById('btn-mobile-copy-pix');
+      const btnMobileCopyText = document.getElementById('btn-mobile-copy-text');
+      const btnRenewPix = document.getElementById('btn-renew-pix');
+      const btnMobileRenewPix = document.getElementById('btn-mobile-renew-pix');
+
+      const statusBanner = document.getElementById('status-banner');
+      const statusBannerText = document.getElementById('status-banner-text');
+      const spinnerAwaiting = document.getElementById('spinner-awaiting');
+      const countdownTimer = document.getElementById('countdown-timer');
+      const countdownBadge = document.getElementById('countdown-badge');
+
+      const btnToggleQrMobile = document.getElementById('btn-toggle-qr-mobile');
+      const toggleQrText = document.getElementById('toggle-qr-text');
+      const qrCodeContainer = document.getElementById('qr-code-container');
+      const imgQrCode = document.getElementById('img-qr-code');
+
+      const errorBox = document.getElementById('error-box');
+      const errorTitle = document.getElementById('error-title');
+      const errorMessage = document.getElementById('error-message');
+      const btnRetryError = document.getElementById('btn-retry-error');
+
+      // 3. Captura de UTMs e Session ID
+      function getSessionId() {
+        let sid = sessionStorage.getItem('diaglava_session_id');
+        if (!sid) {
+          sid = 'sid_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 9);
+          sessionStorage.setItem('diaglava_session_id', sid);
+        }
+        return sid;
+      }
+
+      function getUtmParams() {
+        const params = new URLSearchParams(window.location.search);
+        const keys = ['utm_source','utm_medium','utm_campaign','utm_id','utm_term','utm_content','ref','src','sck','xcod'];
+        let utm = {};
+        try {
+          const saved = sessionStorage.getItem('diaglava_utm_tracking');
+          if (saved) utm = JSON.parse(saved);
+        } catch (e) {}
+
+        keys.forEach(k => {
+          const val = params.get(k);
+          if (val && val.trim()) {
+            utm[k] = val.trim().slice(0, 200);
+          }
+        });
+
+        sessionStorage.setItem('diaglava_utm_tracking', JSON.stringify(utm));
+        return utm;
+      }
+
+      // 4. Validações
+      function isValidName(name) {
+        if (!name) return false;
+        const parts = name.trim().split(/\s+/).filter(Boolean);
+        if (parts.length < 2) return false;
+        return parts.every(p => p.length >= 2);
+      }
+
+      function isValidEmail(email) {
+        if (!email) return false;
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim().toLowerCase());
+      }
+
+      function cleanPhone(val) {
+        return (val || '').replace(/\D/g, '');
+      }
+
+      function isValidPhone(phone) {
+        const digits = cleanPhone(phone);
+        if (digits.length !== 10 && digits.length !== 11) return false;
+        const ddd = digits.slice(0, 2);
+        if (!VALID_DDDS.has(ddd)) return false;
+        if (digits.length === 11 && digits[2] !== '9') return false;
+        if (new Set(digits.split('')).size === 1) return false;
+        return true;
+      }
+
+      function formatPhoneInput(val) {
+        const digits = cleanPhone(val).slice(0, 11);
+        if (!digits) return '';
+        if (digits.length <= 2) return '(' + digits;
+        if (digits.length <= 6) return '(' + digits.slice(0,2) + ') ' + digits.slice(2);
+        if (digits.length <= 10) return '(' + digits.slice(0,2) + ') ' + digits.slice(2,6) + '-' + digits.slice(6);
+        return '(' + digits.slice(0,2) + ') ' + digits.slice(2,7) + '-' + digits.slice(7,11);
+      }
+
+      function checkEmailTypo(email) {
+        if (!email || !email.includes('@')) return null;
+        const parts = email.trim().toLowerCase().split('@');
+        if (parts.length !== 2) return null;
+        const [local, domain] = parts;
+        const fixed = DOMAIN_TYPOS[domain];
+        if (fixed) return { full: local + '@' + fixed, domain: fixed };
+        return null;
+      }
+
+      function updateValidationState() {
+        const nameVal = inputName.value.trim();
+        const emailVal = inputEmail.value.trim();
+        const phoneVal = inputPhone.value.trim();
+
+        const nameOk = isValidName(nameVal);
+        const emailOk = isValidEmail(emailVal);
+        const phoneOk = isValidPhone(phoneVal);
+
+        checkName.classList.toggle('hidden', !nameOk);
+        checkEmail.classList.toggle('hidden', !emailOk);
+        checkPhone.classList.toggle('hidden', !phoneOk);
+
+        const formOk = nameOk && emailOk && phoneOk;
+        btnDesktopSubmit.disabled = !formOk;
+        btnMobileSubmit.disabled = !formOk;
+
+        if (state === 'idle' || state === 'incomplete' || state === 'valid') {
+          setState(formOk ? 'valid' : (nameVal || emailVal || phoneVal ? 'incomplete' : 'idle'));
+        }
+      }
+
+      // Máscara e listeners de formulário
+      inputName.addEventListener('input', updateValidationState);
+      inputName.addEventListener('blur', () => {
+        if (inputName.value.trim() && !isValidName(inputName.value)) {
+          showFieldError('name', 'Informe seu nome e sobrenome completo.');
+        } else {
+          hideFieldError('name');
+        }
+      });
+
+      inputEmail.addEventListener('input', () => {
+        updateValidationState();
+        const typo = checkEmailTypo(inputEmail.value);
+        if (typo) {
+          suggestionText.textContent = 'Você quis dizer ' + typo.domain + '?';
+          suggestionEmail.classList.remove('hidden');
+        } else {
+          suggestionEmail.classList.add('hidden');
+        }
+      });
+      inputEmail.addEventListener('blur', () => {
+        if (inputEmail.value.trim() && !isValidEmail(inputEmail.value)) {
+          showFieldError('email', 'Confira o e-mail digitado.');
+        } else {
+          hideFieldError('email');
+        }
+      });
+
+      btnApplySuggestion.addEventListener('click', () => {
+        const typo = checkEmailTypo(inputEmail.value);
+        if (typo) {
+          inputEmail.value = typo.full;
+          suggestionEmail.classList.add('hidden');
+          hideFieldError('email');
+          updateValidationState();
+        }
+      });
+
+      inputPhone.addEventListener('input', (e) => {
+        inputPhone.value = formatPhoneInput(inputPhone.value);
+        updateValidationState();
+      });
+      inputPhone.addEventListener('blur', () => {
+        if (inputPhone.value.trim() && !isValidPhone(inputPhone.value)) {
+          showFieldError('phone', 'Informe o telefone com DDD válido.');
+        } else {
+          hideFieldError('phone');
+        }
+      });
+
+      function showFieldError(field, msg) {
+        const errEl = document.getElementById('error-' + field);
+        const inpEl = document.getElementById('input-' + field);
+        if (errEl && inpEl) {
+          errEl.textContent = msg;
+          errEl.classList.remove('hidden');
+          inpEl.classList.add('border-[#D92D20]', 'bg-[#FEF3F2]');
+        }
+      }
+
+      function hideFieldError(field) {
+        const errEl = document.getElementById('error-' + field);
+        const inpEl = document.getElementById('input-' + field);
+        if (errEl && inpEl) {
+          errEl.textContent = '';
+          errEl.classList.add('hidden');
+          inpEl.classList.remove('border-[#D92D20]', 'bg-[#FEF3F2]');
+        }
+      }
+
+      // 5. Máquina de Estados e UI
+      function setStepper(step) {
+        for (let i = 1; i <= 3; i++) {
+          const nav = document.getElementById('step-nav-' + i);
+          const badge = document.getElementById('step-badge-' + i);
+          const line = document.getElementById('step-line-' + (i - 1));
+
+          if (i === step) {
+            nav.className = 'flex items-center gap-1.5 sm:gap-2 text-[13px] font-semibold text-[#4F46E5] transition-colors';
+            badge.className = 'w-6 h-6 rounded-full flex items-center justify-center text-[12px] font-bold bg-[#4F46E5] text-white shadow-sm';
+            badge.textContent = i;
+          } else if (i < step) {
+            nav.className = 'flex items-center gap-1.5 sm:gap-2 text-[13px] font-medium text-[#1F9D55] transition-colors';
+            badge.className = 'w-6 h-6 rounded-full flex items-center justify-center text-[12px] font-bold bg-[#EAF7EF] text-[#1F9D55] border border-[#1F9D55]/30';
+            badge.textContent = '✓';
+            if (line) line.className = 'flex-1 h-[2px] rounded-full mx-1 bg-[#1F9D55] transition-colors';
+          } else {
+            nav.className = 'flex items-center gap-1.5 sm:gap-2 text-[13px] font-medium text-[#6E6E73]/70 transition-colors';
+            badge.className = 'w-6 h-6 rounded-full flex items-center justify-center text-[12px] font-bold bg-[#E5E5EA] text-[#6E6E73]';
+            badge.textContent = i;
+            if (line) line.className = 'flex-1 h-[2px] rounded-full mx-1 bg-[#E5E5EA] transition-colors';
+          }
+        }
+      }
+
+      function setState(newState) {
+        state = newState;
+        document.getElementById('dev-current-state').textContent = newState;
+
+        // Limpa erros anteriores
+        if (newState !== 'generationError' && newState !== 'communicationError') {
+          errorBox.classList.add('hidden');
+        }
+
+        switch (newState) {
+          case 'idle':
+          case 'incomplete':
+          case 'valid':
+            setStepper(1);
+            form.classList.remove('hidden');
+            customerSummaryCard.classList.add('hidden');
+            pixPanel.classList.add('hidden');
+            btnDesktopSubmit.classList.remove('hidden');
+            btnDesktopSubmit.innerHTML = '<span>Gerar PIX de R$ 37,00</span>';
+            btnMobileSubmit.classList.remove('hidden');
+            btnMobileSubmit.innerHTML = '<span>Gerar PIX de R$ 37,00</span>';
+            btnMobileCopyPix.classList.add('hidden');
+            btnMobileRenewPix.classList.add('hidden');
+            break;
+
+          case 'submitting':
+            setStepper(1);
+            btnDesktopSubmit.disabled = true;
+            btnMobileSubmit.disabled = true;
+            btnDesktopSubmit.innerHTML = '<div class="w-4 h-4 rounded-full border-2 border-white border-r-transparent animate-spin"></div><span>Gerando seu PIX...</span>';
+            btnMobileSubmit.innerHTML = '<div class="w-4 h-4 rounded-full border-2 border-white border-r-transparent animate-spin"></div><span>Gerando seu PIX...</span>';
+            break;
+
+          case 'pixReady':
+          case 'awaiting':
+            setStepper(2);
+            form.classList.add('hidden');
+            customerSummaryCard.classList.remove('hidden');
+            summaryName.textContent = inputName.value || 'Cliente';
+            summaryContact.textContent = (inputEmail.value || '') + ' · ' + (inputPhone.value || '');
+            pixPanel.classList.remove('hidden');
+            pixPanel.classList.remove('opacity-60');
+
+            btnRenewPix.classList.add('hidden');
+            btnMobileRenewPix.classList.add('hidden');
+            btnMobileSubmit.classList.add('hidden');
+            btnMobileCopyPix.classList.remove('hidden');
+            document.getElementById('pix-copy-area').classList.remove('opacity-50', 'pointer-events-none');
+
+            statusBanner.className = 'w-full p-3.5 rounded-[14px] border bg-[#F5F5F7] border-[#E5E5EA] text-[#1D1D1F] flex items-center justify-between gap-2';
+            statusBannerText.textContent = 'Aguardando confirmação do pagamento...';
+            spinnerAwaiting.className = 'w-4 h-4 rounded-full border-2 border-[#4F46E5] border-r-transparent animate-spin';
+            break;
+
+          case 'copied':
+            setStepper(2);
+            btnCopyPix.className = 'w-full h-[52px] rounded-[14px] bg-[#1F9D55] text-white font-medium text-[16px] shadow-sm flex items-center justify-center gap-2';
+            btnCopyText.textContent = 'Copiado ✓';
+            iconCopy.classList.add('hidden');
+            iconCopied.classList.remove('hidden');
+            btnMobileCopyPix.className = 'w-full h-[52px] rounded-[14px] bg-[#1F9D55] text-white font-medium text-[16px] shadow-sm flex items-center justify-center gap-2';
+            btnMobileCopyText.textContent = 'Copiado ✓';
+            document.getElementById('aria-copy-announcement').textContent = 'Código copiado com sucesso';
+            break;
+
+          case 'approved':
+            setStepper(3);
+            statusBanner.className = 'w-full p-4 rounded-[14px] bg-[#EAF7EF] border border-[#1F9D55]/30 flex items-center justify-center gap-3 text-[#1F9D55]';
+            statusBannerText.innerHTML = '<strong>Pagamento confirmado!</strong>';
+            spinnerAwaiting.className = 'hidden';
+            countdownBadge.classList.add('hidden');
+            break;
+
+          case 'expired':
+            setStepper(2);
+            statusBanner.className = 'w-full p-3.5 rounded-[14px] border bg-[#FEF3F2] border-[#D92D20]/30 text-[#D92D20] flex items-center justify-between gap-2';
+            statusBannerText.textContent = 'Este código PIX expirou';
+            spinnerAwaiting.className = 'hidden';
+            countdownBadge.classList.add('hidden');
+            document.getElementById('pix-copy-area').classList.add('opacity-50', 'pointer-events-none');
+            pixPanel.classList.add('opacity-75');
+
+            btnRenewPix.classList.remove('hidden');
+            btnMobileRenewPix.classList.remove('hidden');
+            btnMobileCopyPix.classList.add('hidden');
+            break;
+
+          case 'generationError':
+            setStepper(1);
+            form.classList.remove('hidden');
+            pixPanel.classList.add('hidden');
+            errorBox.classList.remove('hidden');
+            errorTitle.textContent = 'Atenção ao gerar PIX';
+            errorMessage.textContent = 'Não foi possível gerar seu PIX. Confira seus dados e tente novamente.';
+            btnDesktopSubmit.disabled = false;
+            btnMobileSubmit.disabled = false;
+            btnDesktopSubmit.innerHTML = '<span>Gerar PIX de R$ 37,00</span>';
+            btnMobileSubmit.innerHTML = '<span>Gerar PIX de R$ 37,00</span>';
+            break;
+
+          case 'communicationError':
+            setStepper(1);
+            form.classList.remove('hidden');
+            pixPanel.classList.add('hidden');
+            errorBox.classList.remove('hidden');
+            errorTitle.textContent = 'Falha de conexão';
+            errorMessage.textContent = 'Sem conexão com o servidor. Verifique sua internet e tente novamente.';
+            btnDesktopSubmit.disabled = false;
+            btnMobileSubmit.disabled = false;
+            btnDesktopSubmit.innerHTML = '<span>Gerar PIX de R$ 37,00</span>';
+            btnMobileSubmit.innerHTML = '<span>Gerar PIX de R$ 37,00</span>';
+            break;
+        }
+      }
+
+      // 6. Submissão do Checkout
+      async function submitCheckout(isRetry = false) {
+        if (state === 'submitting' || state === 'approved') return;
+
+        setState('submitting');
+        const sid = getSessionId();
+        const utm = getUtmParams();
+
+        try {
+          const res = await fetch('api/checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({
+              sessionId: sid,
+              name: inputName.value.trim(),
+              email: inputEmail.value.trim(),
+              phone: inputPhone.value.trim(),
+              utm: utm,
+              retry: isRetry
+            })
+          });
+
+          const data = await res.json().catch(() => ({}));
+
+          if (res.status === 422 && data.fieldErrors) {
+            setState('incomplete');
+            Object.keys(data.fieldErrors).forEach(f => showFieldError(f, data.fieldErrors[f]));
+            return;
+          }
+
+          if (res.status === 502 || data.type === 'GENERATION_ERROR') {
+            setState('generationError');
+            return;
+          }
+
+          if (res.status === 503 || data.type === 'COMMUNICATION_ERROR') {
+            setState('communicationError');
+            return;
+          }
+
+          if (!res.ok || !data.pixCode) {
+            setState('generationError');
+            return;
+          }
+
+          // Sucesso
+          activeTransactionId = data.transactionId;
+          sessionStorage.setItem('diaglava_active_tid', data.transactionId);
+          inputPixCode.value = data.pixCode;
+
+          if (data.qrCodeBase64) {
+            imgQrCode.src = data.qrCodeBase64;
+          }
+
+          expiresAtTimestamp = new Date(data.expiresAt).getTime();
+          startCountdown();
+          setState('pixReady');
+          startPolling();
+
+        } catch (err) {
+          setState('communicationError');
+        }
+      }
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        submitCheckout(false);
+      });
+
+      btnMobileSubmit.addEventListener('click', () => {
+        submitCheckout(false);
+      });
+
+      btnRenewPix.addEventListener('click', () => submitCheckout(true));
+      btnMobileRenewPix.addEventListener('click', () => submitCheckout(true));
+      btnRetryError.addEventListener('click', () => submitCheckout(false));
+
+      // 7. Cópia do Código PIX
+      async function copyPixCode() {
+        const code = inputPixCode.value;
+        if (!code || state === 'expired') return;
+
+        let ok = false;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          try {
+            await navigator.clipboard.writeText(code);
+            ok = true;
+          } catch (e) {}
+        }
+
+        if (!ok) {
+          try {
+            inputPixCode.focus();
+            inputPixCode.select();
+            ok = document.execCommand('copy');
+          } catch (e) {}
+        }
+
+        setState('copied');
+        setTimeout(() => {
+          btnCopyPix.className = 'w-full h-[52px] rounded-[14px] bg-[#4F46E5] text-white font-medium text-[16px] shadow-sm hover:bg-[#4338CA] active:bg-[#3730A3] focus:outline-none focus:ring-4 focus:ring-[#4F46E5]/25 transition-all duration-200 flex items-center justify-center gap-2';
+          btnCopyText.textContent = 'Copiar código PIX';
+          iconCopy.classList.remove('hidden');
+          iconCopied.classList.add('hidden');
+          btnMobileCopyPix.className = 'w-full h-[52px] rounded-[14px] bg-[#4F46E5] text-white font-medium text-[16px] shadow-sm hover:bg-[#4338CA] active:bg-[#3730A3] focus:outline-none transition-all duration-200 flex items-center justify-center gap-2';
+          btnMobileCopyText.textContent = 'Copiar código PIX';
+          setState('awaiting');
+        }, 2000);
+      }
+
+      btnCopyPix.addEventListener('click', copyPixCode);
+      btnMobileCopyPix.addEventListener('click', copyPixCode);
+
+      // Toggle QR Code no Mobile
+      btnToggleQrMobile.addEventListener('click', () => {
+        qrCodeOpenMobile = !qrCodeOpenMobile;
+        qrCodeContainer.classList.toggle('hidden', !qrCodeOpenMobile);
+        toggleQrText.textContent = qrCodeOpenMobile ? 'Ocultar QR Code' : 'Ver QR Code para escanear';
+      });
+
+      // 8. Contador Regressivo
+      function startCountdown() {
+        if (countdownTimerId) clearInterval(countdownTimerId);
+
+        function tick() {
+          if (!expiresAtTimestamp) return;
+          const diff = Math.floor((expiresAtTimestamp - Date.now()) / 1000);
+          if (diff <= 0) {
+            countdownTimer.textContent = '00:00';
+            clearInterval(countdownTimerId);
+            setState('expired');
+            stopPolling();
+            return;
+          }
+
+          const m = Math.floor(diff / 60);
+          const s = diff % 60;
+          countdownTimer.textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+
+          if (diff < 120) {
+            countdownBadge.className = 'flex items-center gap-1 text-[13px] font-semibold px-2 py-0.5 rounded-md bg-[#FFFAEB] text-[#B54708] border border-[#B54708]/30';
+          }
+        }
+
+        tick();
+        countdownTimerId = setInterval(tick, 1000);
+      }
+
+      // 9. Polling de Status
+      async function pollCheck() {
+        if (!activeTransactionId || state === 'approved' || state === 'expired') return;
+
+        try {
+          const res = await fetch('api/checkout/status?tid=' + encodeURIComponent(activeTransactionId), {
+            headers: { 'Accept': 'application/json' },
+            cache: 'no-store'
+          });
+
+          if (!res.ok) return;
+          const data = await res.json();
+
+          if (data.status === 'paid' && data.redirectUrl) {
+            stopPolling();
+            setState('approved');
+            sessionStorage.removeItem('diaglava_active_tid');
+            triggerRedirect(data.redirectUrl);
+            return;
+          }
+
+          if (data.status === 'expired' || data.status === 'failed') {
+            stopPolling();
+            setState('expired');
+            return;
+          }
+        } catch (e) {
+          // Reconectando não fatal
+          statusBannerText.textContent = 'Reconectando ao servidor...';
+        }
+      }
+
+      function startPolling() {
+        stopPolling();
+        pollCheck();
+        pollingTimerId = setInterval(pollCheck, 5000);
+      }
+
+      function stopPolling() {
+        if (pollingTimerId) {
+          clearInterval(pollingTimerId);
+          pollingTimerId = null;
+        }
+      }
+
+      // Pausar polling ao ocultar aba
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          if (state === 'pixReady' || state === 'awaiting' || state === 'copied') {
+            pollCheck();
+            if (!pollingTimerId) pollingTimerId = setInterval(pollCheck, 5000);
+          }
+        } else {
+          stopPolling();
+        }
+      });
+
+      // 10. Redirecionamento Pós-Pagamento
+      function triggerRedirect(url) {
+        if (isRedirecting) return;
+        isRedirecting = true;
+        setTimeout(() => {
+          window.location.replace(url);
+        }, 500);
+      }
+
+      // 11. Retomada ao Recarregar a Página
+      async function checkSessionResumption() {
+        getUtmParams();
+        getSessionId();
+
+        if (!activeTransactionId) return;
+
+        try {
+          const res = await fetch('api/checkout/status?tid=' + encodeURIComponent(activeTransactionId));
+          if (!res.ok) return;
+          const data = await res.json();
+
+          if (data.status === 'paid' && data.redirectUrl) {
+            setState('approved');
+            triggerRedirect(data.redirectUrl);
+          } else if (data.status === 'expired') {
+            setState('expired');
+          } else if (data.status === 'pending' && data.pixCode) {
+            inputPixCode.value = data.pixCode;
+            if (data.qrCodeBase64) imgQrCode.src = data.qrCodeBase64;
+            expiresAtTimestamp = new Date(data.expiresAt).getTime();
+            startCountdown();
+            setState('awaiting');
+            startPolling();
+          }
+        } catch (e) {}
+      }
+
+      checkSessionResumption();
+
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #FFFFFF;
+  --surface: #F5F5F7;
+  --border: #E5E5EA;
+  --foreground: #1D1D1F;
+  --secondary: #6E6E73;
+  --accent: #4F46E5;
+  --accent-hover: #4338CA;
+  --accent-pressed: #3730A3;
+  --success: #1F9D55;
+  --success-bg: #EAF7EF;
+  --error: #D92D20;
+  --error-bg: #FEF3F2;
+  --warning: #B54708;
+  --warning-bg: #FFFAEB;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Evitar zoom automático desagradável no iOS Safari */
+input, select, textarea {
+  font-size: 16px !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
